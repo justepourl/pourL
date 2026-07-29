@@ -8,17 +8,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY .docker/entrypoint.sh /entrypoint.sh
 
 RUN cd /var/www/html && cp .env.example .env
 
 RUN cd /var/www/html && composer install --no-dev --no-interaction --optimize-autoloader
 
-RUN cd /var/www/html && php artisan key:generate --force
-
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod +x /entrypoint.sh
 
 ENV APP_ENV=production
 ENV APP_DEBUG=false
-ENV DB_CONNECTION=sqlite
+ENV APP_URL=https://pour-lina.onrender.com
 
 EXPOSE 80
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["apache2-foreground"]
