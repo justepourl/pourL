@@ -19,13 +19,6 @@ RUN php artisan key:generate --force
 RUN touch database/database.sqlite
 RUN chmod -R 775 storage bootstrap/cache
 
-# Override .env for production
-RUN sed -i 's/APP_ENV=.*/APP_ENV=production/' .env && \
-    sed -i 's/APP_DEBUG=.*/APP_DEBUG=false/' .env && \
-    sed -i 's|APP_URL=.*|APP_URL=https://pourl.onrender.com|' .env
-
-RUN php artisan config:cache
-
 EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
