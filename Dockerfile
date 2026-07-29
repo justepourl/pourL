@@ -15,10 +15,10 @@ WORKDIR /var/www/html
 
 # Setup Laravel
 RUN cp .env.example .env
+RUN composer install --no-dev --no-interaction --optimize-autoloader
 RUN php artisan key:generate --force
 RUN touch database/database.sqlite
 RUN chmod -R 775 storage bootstrap/cache
-RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 # Override .env for production before caching config
 RUN sed -i 's/APP_ENV=.*/APP_ENV=production/' .env && \
